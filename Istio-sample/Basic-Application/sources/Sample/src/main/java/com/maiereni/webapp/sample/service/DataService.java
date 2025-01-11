@@ -31,9 +31,10 @@ public interface DataService {
     /**
      * Data to modify
      * @param dataRequest operation to perform
+     * @return id of the saved data
      * @throws DataServiceException a failure
      */
-    void saveData(DataRequest dataRequest) throws DataServiceException;
+    String saveData(DataRequest dataRequest) throws DataServiceException;
 
     /**
      * Get all data

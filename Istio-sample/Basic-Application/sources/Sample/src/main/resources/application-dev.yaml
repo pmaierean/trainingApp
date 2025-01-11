@@ -1,0 +1,6 @@
+spring:
+  application:
+     name: Sample
+logging:
+  level:
+     com.maiereni.webapp: debug

@@ -30,4 +30,5 @@ import java.io.Serializable;
 @Setter
 public class DataResponse <T extends Serializable> extends BaseResponse {
     private T data;
+    private String selected;
 }

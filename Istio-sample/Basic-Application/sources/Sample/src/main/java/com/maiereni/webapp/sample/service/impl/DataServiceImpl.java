@@ -46,19 +46,21 @@ public class DataServiceImpl implements DataService {
      * @throws DataServiceException a failure
      */
     @Override
-    public void saveData(DataRequest dataRequest) throws DataServiceException {
+    public String saveData(DataRequest dataRequest) throws DataServiceException {
         if (dataRequest == null) {
             throw new DataServiceException("dataRequest is null");
         }
+        String ret = null;
         if (dataRequest.getOperation() == null || dataRequest.getOperation().equals(DataRequestOperation.ADD)) {
-            dataOperationProcessor.addData(dataRequest.getData());
+            ret = dataOperationProcessor.addData(dataRequest.getData());
         }
         else if (dataRequest.getOperation().equals(DataRequestOperation.UPDATE)) {
-            dataOperationProcessor.updateData(dataRequest.getData());
+            ret = dataOperationProcessor.updateData(dataRequest.getData());
         }
         else {
-            dataOperationProcessor.deleteData(dataRequest.getData());
+            ret = dataOperationProcessor.deleteData(dataRequest.getData());
         }
+        return ret;
     }
 
     /**

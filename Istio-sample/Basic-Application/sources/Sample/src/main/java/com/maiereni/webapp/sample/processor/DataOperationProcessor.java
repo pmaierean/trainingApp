@@ -27,8 +27,8 @@ import java.util.List;
  * @date 1/7/2025 12:55 PM
  **/
 public interface DataOperationProcessor {
-    void addData(BaseData date) throws DataServiceException;
-    void updateData(BaseData date) throws DataServiceException;
-    void deleteData(BaseData date) throws DataServiceException;
+    String addData(BaseData date) throws DataServiceException;
+    String updateData(BaseData date) throws DataServiceException;
+    String deleteData(BaseData date) throws DataServiceException;
     List<BaseData> findData(String keyPattern) throws DataServiceException;
 }

@@ -46,7 +46,7 @@ public class CsvFileDataOperationProcessorImpl implements DataOperationProcessor
     private static final String DATA_IS_INVALID = "data missing key or value";
     private static final String DATA_ID_NOT_NULL = "data id must be null";
     private static final String DATA_ID_IS_NULL = "data id must not be null";
-    private static final String TEMPLATE = "%s,\"%s\",\"%s\"\n";
+    private static final String TEMPLATE = "%s,\"%s\",\"%s\"\r\n";
     private File csvFile;
 
     public CsvFileDataOperationProcessorImpl() throws DataServiceException {
@@ -70,28 +70,30 @@ public class CsvFileDataOperationProcessorImpl implements DataOperationProcessor
      * @throws DataServiceException failure to add
      */
     @Override
-    public void addData(BaseData data) throws DataServiceException {
+    public String addData(BaseData data) throws DataServiceException {
         if (data == null) {
             throw new DataServiceException(DATA_IS_NULL);
         }
-        if (StringUtils.isAnyBlank(data.getKey(), data.getValue())) {
+        if (data.getKey() == null || data.getValue() == null) {
             throw new DataServiceException(DATA_IS_INVALID);
         }
-        if (data.getId() != null) {
+        if (StringUtils.isNotBlank(data.getId())) {
             throw new DataServiceException(DATA_ID_NOT_NULL);
         }
         try(StringWriter writer = new StringWriter()) {
             if (csvFile.exists()) {
                 writer.write(FileUtils.readFileToString(csvFile, Charset.defaultCharset()));
-                writer.write(System.lineSeparator());
             }
-            String line = toLine(data);
+            String id = UUID.randomUUID().toString();
+            String line = toLine(id, data);
             writer.write(line);
             log.debug("Write '{}' to the file", line);
             FileUtils.writeStringToFile(csvFile, writer.toString(), Charset.defaultCharset());
+            return id;
         }
         catch (Exception e) {
             log.error("Failed to persist", e);
+            throw new DataServiceException(DATA_IS_INVALID);
         }
     }
 
@@ -101,7 +103,7 @@ public class CsvFileDataOperationProcessorImpl implements DataOperationProcessor
      * @throws DataServiceException failed to update
      */
     @Override
-    public void updateData(BaseData data) throws DataServiceException {
+    public String updateData(BaseData data) throws DataServiceException {
         if (data == null) {
             throw new DataServiceException(DATA_IS_NULL);
         }
@@ -112,6 +114,7 @@ public class CsvFileDataOperationProcessorImpl implements DataOperationProcessor
             throw new DataServiceException(DATA_ID_IS_NULL);
         }
         change(data, false);
+        return data.getId();
     }
 
     /**
@@ -120,7 +123,7 @@ public class CsvFileDataOperationProcessorImpl implements DataOperationProcessor
      * @throws DataServiceException failed to delete data
      */
     @Override
-    public void deleteData(BaseData data) throws DataServiceException {
+    public String deleteData(BaseData data) throws DataServiceException {
         if (data == null) {
             throw new DataServiceException(DATA_IS_NULL);
         }
@@ -128,6 +131,7 @@ public class CsvFileDataOperationProcessorImpl implements DataOperationProcessor
             throw new DataServiceException(DATA_ID_IS_NULL);
         }
         change(data, true);
+        return data.getId();
     }
 
     /**
@@ -199,7 +203,10 @@ public class CsvFileDataOperationProcessorImpl implements DataOperationProcessor
     }
 
     private String toLine(BaseData data) {
-        String id = data.getId();
+        return toLine(data.getId(), data);
+    }
+
+    private String toLine(String id, BaseData data) {
         if (StringUtils.isBlank(id)) {
             id = UUID.randomUUID().toString();
         }

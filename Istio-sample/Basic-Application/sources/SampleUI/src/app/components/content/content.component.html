@@ -1,14 +1,38 @@
-  @if(dataSource) {
+<div class="sample-data mat-elevation-z8">
+    <form [formGroup]="form">
+@if(dataSource) {
     <mat-table #table [dataSource]="dataSource" class="mat-elevation-z8">
-      <ng-container matColumnDef="key">
-        <mat-header-cell *matHeaderCellDef>Key</mat-header-cell>
-        <mat-cell *matCellDef="let e"> {{ e.key }} </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="value">
-        <mat-header-cell *matHeaderCellDef>Value</mat-header-cell>
-        <mat-cell *matCellDef="let e"> {{ e.value }} </mat-cell>
-      </ng-container>
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        <ng-container matColumnDef="key">
+            <mat-header-cell *matHeaderCellDef>Key</mat-header-cell>
+            <mat-cell *matCellDef="let e">
+                @if (e.selected) {
+                    <input formControlName="key" (focusout)="changeCurrentSelected($event)">
+                }
+                @else {
+                    {{ e.key }}
+                }
+            </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="value">
+            <mat-header-cell *matHeaderCellDef>Value</mat-header-cell>
+            <mat-cell *matCellDef="let e" >
+                @if (e.selected) {
+                    <input formControlName="value" (focusout)="changeCurrentSelected($event)">
+                }
+                @else {
+                    {{ e.value }}
+                }
+            </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"
+                 (keyup)="selectRecord($event, row)" (click)="selectRecord($event, row)"></mat-row>
     </mat-table>
-  }
+    @if(pageIndex) {
+        <mat-paginator #paginator [pageSize]="numberPerPage" [showFirstLastButtons]="true" [length]="numberOfRecords" [pageIndex]="pageIndex"></mat-paginator>
+    } @else {
+        <mat-paginator #paginator [pageSize]="numberPerPage" [showFirstLastButtons]="true" [length]="numberOfRecords"></mat-paginator>
+    }
+}
+    </form>
+</div>

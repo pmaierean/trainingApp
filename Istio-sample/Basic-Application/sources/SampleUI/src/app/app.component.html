@@ -1,7 +1,12 @@
-<mat-grid-list cols="4" rowHeight="40px">
-  <mat-grid-tile colspan="4">
+<mat-grid-list cols="4" rowHeight="50px">
+  <mat-grid-tile colspan="4" rowspan="3">
     <h1>The application</h1>
   </mat-grid-tile>
+  <mat-grid-tile></mat-grid-tile>
+  <mat-grid-tile colspan="2" rowspan="1">
+    <app-toolbar></app-toolbar>
+  </mat-grid-tile>
+  <mat-grid-tile></mat-grid-tile>
   <mat-grid-tile rowspan="10"></mat-grid-tile>
   <mat-grid-tile rowspan="10" colspan="2">
     <app-content></app-content>

@@ -1,0 +1,13 @@
+@use '@angular/material' as mat;
+@use '../../../styles.scss';
+
+div.sample-data mat-header-cell {
+  background-color: mat.m2-get-color-from-palette(styles.$my-accent, default, 100);
+}
+div.sample-data mat-cell {
+  border-left: 1px solid mat.m2-get-color-from-palette(styles.$my-accent, default, 100);
+}
+div.sample-data mat-row {
+  border-right: 1px solid mat.m2-get-color-from-palette(styles.$my-accent, default, 100);
+  border-bottom: 1px solid mat.m2-get-color-from-palette(styles.$my-accent, default, 100);
+}

@@ -54,17 +54,22 @@ public class IndexController {
 
     @PostMapping(path="/data")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<BaseResponse> setData(@RequestBody DataRequest dataRequest) {
-        BaseResponse baseResponse = new BaseResponse();
+    public ResponseEntity<DataResponse<BaseDatas>> setData(@RequestBody DataRequest dataRequest) {
+        DataResponse<BaseDatas> response = new DataResponse<>();
         try {
-            dataService.saveData(dataRequest);
+            String id = dataService.saveData(dataRequest);
+            BaseDatas data = new BaseDatas();
+            List<BaseData> bd = dataService.findData(".*");
+            data.setData(bd);
+            response.setData(data);
+            response.setSelected(id);
         }
         catch (Exception e) {
             log.error("Failed to persist data", e);
-            baseResponse.setMessage("Failed to persist data");
-            baseResponse.setCode(-1);
+            response.setMessage("Failed to persist data");
+            response.setCode(-1);
         }
-        return ResponseEntity.ok(baseResponse);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping(path="/data")

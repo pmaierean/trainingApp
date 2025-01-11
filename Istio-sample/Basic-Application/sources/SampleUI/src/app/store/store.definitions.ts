@@ -11,5 +11,6 @@ export interface IDataCollection {
 export interface IDataCollectionResponse {
   code: number;
   message: string;
+  selected: string;
   data: IDataCollection;
 }

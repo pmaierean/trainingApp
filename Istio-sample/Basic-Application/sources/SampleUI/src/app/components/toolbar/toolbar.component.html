@@ -1,0 +1,14 @@
+<mat-toolbar>
+    <mat-toolbar-row>
+        <span class="spacer"></span>
+        <mat-icon (keyup)="addRecord($event)" (click)="addRecord($event)" [class]="'available'" svgIcon="add"
+                  matTooltip="Add record" matTooltipClass="mtooltip" [matTooltipPosition]="'above'"></mat-icon>
+        @if(hasSelected) {
+            <mat-icon (keyup)="addRecord($event)" (click)="deleteRecord($event)" class="available" svgIcon="remove"
+                 matTooltip="Remove record"  matTooltipClass="mtooltip" [matTooltipPosition]="'above'"></mat-icon>
+        }
+        @else {
+            <mat-icon class="icon" svgIcon="remove"></mat-icon>
+        }
+    </mat-toolbar-row>
+</mat-toolbar>
