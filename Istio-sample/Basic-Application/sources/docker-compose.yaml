@@ -1,0 +1,29 @@
+name: training-app
+services:
+  training-ui:
+    image: pmaierean/training-app-ui:2
+    build:
+      context: SampleUI
+      dockerfile: Dockerfile
+    ports:
+      - 4200:4200
+    restart: always
+  training-boot:
+    image: pmaierean/training-app:2
+    build:
+      context: Sample
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - "D:/opt/app/local/sample:/opt/app/local/sample"
+    env_file:
+      - .env
+    restart: always
+  router:
+    image: pmaierean/training-router:2
+    build:
+      context: Router
+      dockerfile: Dockerfile
+    ports:
+      - 80:80

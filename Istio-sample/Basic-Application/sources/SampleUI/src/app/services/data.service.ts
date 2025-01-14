@@ -2,15 +2,17 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {IData, IDataCollectionResponse} from '../store/store.definitions';
 import {Observable} from 'rxjs';
+import { Environment } from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class DataService {
   constructor(private readonly httpClient: HttpClient) { }
 
   getAll(): Observable<IDataCollectionResponse> {
-    return this.httpClient.get<IDataCollectionResponse>('http://localhost:8080/v1/api/data');
+    return this.httpClient.get<IDataCollectionResponse>(Environment.backendUrl + '/v1/api/data');
   }
 
   addElement(element: IData): Observable<IDataCollectionResponse> {
@@ -26,7 +28,7 @@ export class DataService {
   }
 
   private changeElement(operation: string, element: IData): Observable<IDataCollectionResponse> {
-    return this.httpClient.post<IDataCollectionResponse>('http://localhost:8080/v1/api/data', {
+    return this.httpClient.post<IDataCollectionResponse>(Environment.backendUrl + '/v1/api/data', {
       operation: operation,
       data: element
     });
