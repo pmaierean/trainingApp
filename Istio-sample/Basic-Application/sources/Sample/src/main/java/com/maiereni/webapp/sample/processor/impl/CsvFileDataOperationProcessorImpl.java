@@ -39,8 +39,8 @@ import java.util.UUID;
 @Component
 @Slf4j
 public class CsvFileDataOperationProcessorImpl implements DataOperationProcessor {
-    public static final String FILE_DATA_PATH = "file.data.path";
-    private static final String MISSING_PERSISTENT_FILE_PATH = "Missing persistent file path";
+    public static final String FILE_DATA_PATH = "FILE_PATH";
+    public static final String DEFAULT_FILE_PATH = "/opt/app/local/sample/storage.csv";
     private static final String CANNOT_MAKE_FOLDER = "Cannot make folder";
     private static final String DATA_IS_NULL = "data is null";
     private static final String DATA_IS_INVALID = "data missing key or value";
@@ -52,7 +52,7 @@ public class CsvFileDataOperationProcessorImpl implements DataOperationProcessor
     public CsvFileDataOperationProcessorImpl() throws DataServiceException {
         String filePath = System.getenv(FILE_DATA_PATH);
         if (StringUtils.isBlank(filePath)) {
-            throw new DataServiceException(MISSING_PERSISTENT_FILE_PATH);
+            filePath = DEFAULT_FILE_PATH;
         }
         csvFile = new File(filePath);
         if (!csvFile.exists()) {

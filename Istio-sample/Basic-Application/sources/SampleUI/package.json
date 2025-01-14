@@ -4,7 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "startd": "ng serve --host 0.0.0.0",
     "build": "ng build",
+    "buildDev": "ng build --configuration dev",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -37,5 +39,8 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.6.2"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "*"
   }
 }
