@@ -1,6 +1,7 @@
-FROM ubuntu:latest
+FROM nginx:1.27.3
 LABEL authors="Petre Maierean"
 
-FROM nginx:latest
-COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
+ENV DOMAIN_BOOT=${DOMAIN_BOOT:-training-boot}\
+    DOMAIN_UI=${DOMAIN_UI:-training-ui}
+COPY ./nginx/nginx.conf /etc/nginx/templates/default.conf.template
 COPY ./src /usr/share/nginx/html

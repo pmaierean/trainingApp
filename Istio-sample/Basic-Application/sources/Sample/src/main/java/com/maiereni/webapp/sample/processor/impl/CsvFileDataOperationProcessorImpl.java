@@ -47,7 +47,7 @@ public class CsvFileDataOperationProcessorImpl implements DataOperationProcessor
     private static final String DATA_ID_NOT_NULL = "data id must be null";
     private static final String DATA_ID_IS_NULL = "data id must not be null";
     private static final String TEMPLATE = "%s,\"%s\",\"%s\"\r\n";
-    private File csvFile;
+    private final File csvFile;
 
     public CsvFileDataOperationProcessorImpl() throws DataServiceException {
         String filePath = System.getenv(FILE_DATA_PATH);
@@ -61,7 +61,12 @@ public class CsvFileDataOperationProcessorImpl implements DataOperationProcessor
                     throw new DataServiceException(CANNOT_MAKE_FOLDER);
                 }
             }
+            BaseData baseData = new BaseData();
+            baseData.setKey("sampleKey");
+            baseData.setValue("sampleValue");
+            addData(baseData);
         }
+        log.info("The source file path is {}", csvFile.getAbsolutePath());
     }
 
     /**

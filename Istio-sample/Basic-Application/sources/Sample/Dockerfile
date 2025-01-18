@@ -1,7 +1,7 @@
 FROM eclipse-temurin:21
 LABEL authors="Petre Maierean"
 
-ARG VERSION=${JAR_VERSION:-0.0.1-SNAPSHOT}
+ARG VERSION=${JAR_VERSION:-0.0.2-SNAPSHOT}
 
 WORKDIR /opt/app
 COPY ./build/libs/Sample-$VERSION.jar ./Sample.jar

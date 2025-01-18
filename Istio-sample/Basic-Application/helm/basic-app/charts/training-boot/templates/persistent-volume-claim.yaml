@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "training-boot.fullname" . }}-pvc
+  namespace: {{ include "training-boot.namespace" . }}
+  labels:
+    {{- include "training-boot.labels" . | nindent 4 }}
+spec:
+  volumeName: {{ include "training-boot.fullname" . }}-pv
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 1Gi
