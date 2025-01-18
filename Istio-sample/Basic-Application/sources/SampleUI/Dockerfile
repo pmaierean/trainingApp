@@ -13,7 +13,7 @@ RUN npm install @rollup/rollup-linux-x64-gnu@latest
 # Copy all files
 COPY . .
 # Run ng build through npm to create dist folder
-RUN ng build --configuration dev
+RUN ng build --configuration=development
 
 EXPOSE 4200
 

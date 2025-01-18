@@ -1,7 +1,7 @@
 name: training-app
 services:
   training-ui:
-    image: pmaierean/training-app-ui:2
+    image: pmaierean/training-app-ui:0.2
     build:
       context: SampleUI
       dockerfile: Dockerfile
@@ -9,7 +9,7 @@ services:
       - 4200:4200
     restart: always
   training-boot:
-    image: pmaierean/training-app:2
+    image: pmaierean/training-app:0.1
     build:
       context: Sample
       dockerfile: Dockerfile
@@ -20,10 +20,13 @@ services:
     env_file:
       - .env
     restart: always
-  router:
-    image: pmaierean/training-router:2
+  training-router:
+    image: pmaierean/training-router:0.1
     build:
       context: Router
       dockerfile: Dockerfile
     ports:
       - 80:80
+    environment:
+      - DOMAIN_BOOT=training-boot
+      - DOMAIN_UI=training-ui
