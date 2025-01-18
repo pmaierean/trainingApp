@@ -6,8 +6,8 @@
     "start": "ng serve",
     "startd": "ng serve --host 0.0.0.0",
     "build": "ng build",
-    "buildDev": "ng build --configuration dev",
-    "watch": "ng build --watch --configuration development",
+    "buildDev": "ng build --configuration=dev",
+    "watch": "ng build --watch --configuration=dev",
     "test": "ng test"
   },
   "private": true,

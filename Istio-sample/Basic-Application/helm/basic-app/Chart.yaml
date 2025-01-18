@@ -1,0 +1,25 @@
+apiVersion: v2
+name: basic-app
+description: A Helm chart to deploy the Basic Application
+type: application
+version: 0.0.1
+appVersion: "0.0.1"
+dependencies:
+  - name: training-router
+    version: "0.0.1"
+    repository: "file://charts/training-router"
+    alias: training-router
+    tag:
+      - training-router
+  - name: training-boot
+    version: "0.0.1"
+    repository: "file://charts/training-boot"
+    alias: training-restful
+    tags:
+      - training-restful
+  - name: training-ui
+    version: 0.1.0
+    repository: "file://charts/training-ui"
+    alias: training-angular
+    tags:
+      - training-angular
