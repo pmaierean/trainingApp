@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "training-boot.fullname" . }}
-  namespace: {{ include "training-boot.namespace" . }}
+  name: {{ include "training-ui.fullname" . }}
+  namespace: {{ include "training-ui.namespace" . }}
   labels:
-    {{- include "training-boot.labels" . | nindent 4 }}
+    {{- include "training-ui.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "training-boot.selectorLabels" . | nindent 6 }}
+      {{- include "training-ui.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,7 +19,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "training-boot.labels" . | nindent 8 }}
+        {{- include "training-ui.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -28,7 +28,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "training-boot.serviceAccountName" . }}
+      serviceAccountName: {{ include "training-ui.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       restartPolicy: Always
@@ -38,9 +38,6 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          env:
-            - name: FILE_PATH
-              value: /opt/app/local/sample/storage.csv
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -52,12 +49,7 @@ spec:
             terminationGracePeriodSeconds: 60
             httpGet:
               host: 127.0.0.1
-              path: /v1/api/index
+              path: /
               port: {{ .Values.service.port }}
-          volumeMounts:
-            - mountPath: /opt/app/local/sample
-              name: csv-volume
-      volumes:
-        - name: csv-volume
-          persistentVolumeClaim:
-            claimName: {{ include "training-boot.fullname" . }}-pvc
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
