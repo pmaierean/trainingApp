@@ -59,4 +59,10 @@ To uninstall form a Kubernetes cluster istio use:
 
 For bare-metal Kubernetes clusters, I've also provided install and uninstall scripts for MetalLB (https://metallb.io/) 
 
-### 
+### Documentation
+
+The file at ./documentation/Step3.docx contains my notes about Step3
+
+The component diagram at this stage of development is below
+
+![Component diagram](https://github.com/pmaierean/trainingApp/blob/main/Istio-sample/Basic-Application/documentation/Step3.png)
