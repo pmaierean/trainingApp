@@ -21,7 +21,7 @@ services:
       - .env
     restart: always
   training-router:
-    image: pmaierean/training-router:0.1
+    image: pmaierean/training-router:0.3
     build:
       context: Router
       dockerfile: Dockerfile

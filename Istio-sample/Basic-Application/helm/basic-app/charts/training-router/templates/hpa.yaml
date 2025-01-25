@@ -2,15 +2,15 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "training-ui.fullname" . }}
-  namespace: {{ include "training-ui.namespace" . }}
+  name: {{ include "training-router.fullname" . }}
+  namespace: {{ include "training-router.namespace" . }}
   labels:
-    {{- include "training-ui.labels" . | nindent 4 }}
+    {{- include "training-router.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "training-ui.fullname" . }}
+    name: {{ include "training-router.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
