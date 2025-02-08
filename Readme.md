@@ -48,7 +48,7 @@ This is the component diagram at this stage
 
 ![Component diagram](https://github.com/pmaierean/trainingApp/blob/step2-minimal-kubernetes/Istio-sample/Basic-Application/documentation/Step2.png)
 
-# Stage 3 - Application with Istio as a service mesh
+## Stage 3 - Application with Istio as a service mesh
 
 ### Istio install scripts
 I've added the shell scripts at ./scripts. To install istio (https://istio.io/latest/) use:
@@ -66,3 +66,18 @@ The file at ./documentation/Step3.docx contains my notes about Step3
 The component diagram at this stage of development is below
 
 ![Component diagram](https://github.com/pmaierean/trainingApp/blob/main/Istio-sample/Basic-Application/documentation/Step3.png)
+
+## Stage 4 - Application with a persistence layer on Postgresql
+
+### Database definition
+I've added a Postgres service with docker-compose-yaml, along with one running Liquidbase (https://www.liquibase.com/) that
+creates the schema used by the application. I've added the persistence layer to the Restful application that maps the database
+tables to POJOs with a JPA library.
+
+The database connection is made directly from the Restful container in Kubernets (see Istio-sample/Basic-Application/helm/basic-app-3/charts/training-restful/values.yaml)
+
+### Documentation
+
+The component diagram at this stage of development is below
+
+![Component diagram](https://github.com/pmaierean/trainingApp/blob/main/Istio-sample/Basic-Application/documentation/Step4.png)
