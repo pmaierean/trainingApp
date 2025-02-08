@@ -10,9 +10,9 @@ export class WrappingService {
   readonly datastore = inject(DataStore);
   readonly dataService = inject(DataService);
 
-  addNew() {
+  addNew(fid: string) {
     this.datastore.setLoading();
-    const c = this.dataService.addElement({id:'', key:'', value:''}).subscribe({
+    const c = this.dataService.addElement({id:'', key:'', value:'', fid: fid}).subscribe({
       next: r => {
         this.datastore.addAll(r);
       },
