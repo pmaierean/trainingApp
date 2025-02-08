@@ -1,2 +1,6 @@
 .idea
 trainingApp.iml
+Istio-sample/Basic-Application/sources/logs/docker.build.log
+Istio-sample/Basic-Application/sources/logs/docker.result.log
+.idea/misc.xml
+.idea/modules.xml

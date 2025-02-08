@@ -22,7 +22,7 @@ interface IElement {
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
 })
-export class ContentComponent implements OnDestroy, OnInit {
+export class ContentComponent implements OnDestroy {
   readonly numberPerPage = 5;
   readonly dataStore = inject(DataStore);
   readonly wrappingService= inject(WrappingService);
@@ -38,6 +38,7 @@ export class ContentComponent implements OnDestroy, OnInit {
   numberOfRecords = 0;
   selected: IData | undefined;
   rawData?: IData[];
+  fId?: string;
 
   form = new FormGroup({
       key: new FormControl('', Validators.required),
@@ -64,9 +65,6 @@ export class ContentComponent implements OnDestroy, OnInit {
         }
       }
     });
-  }
-
-  ngOnInit(): void {
   }
 
   ngOnDestroy(): void {
@@ -126,6 +124,9 @@ export class ContentComponent implements OnDestroy, OnInit {
     this.rawData = value;
     const d = new Array<IElement>();
     value.forEach(v => {
+      if (!this.fId) {
+        this.fId = v.fid;
+      }
       d.push({
         id: v.id,
         key: v.key,
@@ -164,7 +165,7 @@ export class ContentComponent implements OnDestroy, OnInit {
         this.dataStore.setSelected(row.id);
       }
       else {
-        this.wrappingService.addNew();
+        this.wrappingService.addNew(this.fId? this.fId: '');
       }
     }
   }
@@ -176,7 +177,8 @@ export class ContentComponent implements OnDestroy, OnInit {
       this.wrappingService.changeData({
         id: this.selected.id,
         key: key,
-        value: value
+        value: value,
+        fid: this.fId? this.fId: ''
       });
     }
   }

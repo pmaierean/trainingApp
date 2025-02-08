@@ -22,5 +22,5 @@ fi
 if [ -n "`helm list -n istio-ingress | grep "istio-ingressgateway"`" ]; then
   echo 'istio-ingressgateway has already been installed'
 else
-  helm install istio-ingressgateway istio/gateway -n istio-ingress --create-namespace
+  helm install istio-ingressgateway istio/gateway -n istio-system --create-namespace
 fi

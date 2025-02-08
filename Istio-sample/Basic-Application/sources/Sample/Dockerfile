@@ -5,7 +5,10 @@ ARG VERSION=${JAR_VERSION:-0.0.2-SNAPSHOT}
 
 WORKDIR /opt/app
 COPY ./build/libs/Sample-$VERSION.jar ./Sample.jar
-ENV FILE_PATH=${FILE_PATH:-/opt/app/local/sample/storage.csv}
+ENV FILE_PATH=${FILE_PATH:-/opt/app/local/sample/storage.csv}\
+    DATABASE_USER=${DATABASE_USER}\
+    DATABASE_PASSWORD=${DATABASE_PASSWORD}\
+    DATABASE_URL=${DATABASE_URL:-jdbc:postgresql://postgresql:5432/postgres}
 
 RUN mkdir -p /opt/app/local/sample
 

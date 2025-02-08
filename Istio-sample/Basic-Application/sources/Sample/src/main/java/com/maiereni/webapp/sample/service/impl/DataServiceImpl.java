@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
+ * A service object
  * @author Petre Maierean
  * @date 1/7/2025 11:57 AM
  **/
@@ -37,8 +38,8 @@ import java.util.List;
 public class DataServiceImpl implements DataService {
     private final DataOperationProcessor dataOperationProcessor;
 
-    public DataServiceImpl(DataOperationProcessor dataOperationProcessor) {
-        this.dataOperationProcessor = dataOperationProcessor;
+    public DataServiceImpl(DataOperationProcessor dbProcessor) {
+        this.dataOperationProcessor = dbProcessor;
     }
     /**
      * Data to modify

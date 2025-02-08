@@ -17,15 +17,19 @@
  */
 package com.maiereni.webapp.sample.bo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
  * @author Petre Maierean
  * @date 1/7/2025 11:47 AM
  **/
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class BaseData {
+    private String fId;
     private String id;
     private String key;
     private String value;
+    private Integer position;
 }

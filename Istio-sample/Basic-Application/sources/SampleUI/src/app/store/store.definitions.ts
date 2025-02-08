@@ -2,6 +2,7 @@ export interface IData {
   id: string;
   key: string;
   value: string;
+  fid: string;
 }
 
 export interface IDataCollection {

@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: Sample
+  jpa:
+    database: postgresql
+    mapping-resources:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: ChangeMe$191
+    url: jdbc:postgresql://localhost:54322/postgres

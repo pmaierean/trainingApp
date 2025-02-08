@@ -1,5 +1,27 @@
 name: training-app
 services:
+  PostgreSQL:
+    image: postgres:17-alpine
+    container_name: postgresql
+    command: ["postgres", "-c", "log_connections=true"]
+    env_file:
+      - ./Database/.env
+    ports:
+      - 54322:5432
+    restart: always
+  liquidbase:
+    image: pmaierean/maiereni_liquidbase:0.1
+    build:
+      context: Database
+      dockerfile: Dockerfile
+    container_name: liquibase
+    env_file:
+      - ./Database/.env
+    depends_on:
+      PostgreSQL:
+        condition: service_started
+    volumes:
+      - ./Database/src/main/resources/:/liquibase/changelog/
   training-ui:
     image: pmaierean/training-app-ui:0.2
     build:
@@ -9,16 +31,20 @@ services:
       - 4200:4200
     restart: always
   training-boot:
-    image: pmaierean/training-app:0.1
+    image: pmaierean/training-app:0.3
     build:
       context: Sample
       dockerfile: Dockerfile
     ports:
       - 8080:8080
+      - 5009:5009
     volumes:
       - "D:/opt/app/local/sample:/opt/app/local/sample"
     env_file:
       - .env
+    depends_on:
+      liquidbase:
+        condition: service_completed_successfully
     restart: always
   training-router:
     image: pmaierean/training-router:0.3
@@ -30,3 +56,7 @@ services:
     environment:
       - DOMAIN_BOOT=training-boot
       - DOMAIN_UI=training-ui
+    depends_on:
+      training-boot:
+        condition: service_started
+

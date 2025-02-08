@@ -36,7 +36,7 @@ import java.util.UUID;
  * @author Petre Maierean
  * @date 1/7/2025 12:56 PM
  **/
-@Component
+@Component("fileProcessor")
 @Slf4j
 public class CsvFileDataOperationProcessorImpl implements DataOperationProcessor {
     public static final String FILE_DATA_PATH = "FILE_PATH";

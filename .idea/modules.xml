@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Database.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Database.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Sample.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Sample.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/Istio-sample/Basic-Application/sources/SampleUI/SampleUI.iml" filepath="$PROJECT_DIR$/Istio-sample/Basic-Application/sources/SampleUI/SampleUI.iml" />
       <module fileurl="file://$PROJECT_DIR$/trainingApp.iml" filepath="$PROJECT_DIR$/trainingApp.iml" />
