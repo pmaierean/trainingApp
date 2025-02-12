@@ -1,0 +1,32 @@
+# Default values for basic-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+application:
+  namespace: sample
+
+service:
+  port: 80
+  address: training-router
+
+backend:
+  router: training-router
+  boot: training-restful
+  ui: training-ui
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: mylocaldomain.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+          address: training-router
+          port: 80
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local

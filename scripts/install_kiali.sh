@@ -1,5 +1,4 @@
 #!/bin/sh
-
 if [ -n "`helm repo list | grep "prometheus-community"`" ]; then
   echo 'prometheus-community repository has already been added to the list of repositories'
 else

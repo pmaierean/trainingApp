@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "training-restful.fullname" . }}-pvc
+  namespace: {{ include "training-restful.namespace" . }}
+  labels:
+    {{- include "training-restful.labels" . | nindent 4 }}
+spec:
+  volumeName: {{ include "training-restful.fullname" . }}-pv
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 1Gi

@@ -7,20 +7,5 @@ else
   helm repo update
 fi
 
-if [ -n "`helm list -n istio-system | grep "istio-base"`" ]; then
-  echo 'istio-base has already been installed'
-else
-  helm install istio-base istio/base -n istio-system --set defaultRevision=default --create-namespace
-fi
-
-if [ -n "`helm list -n istio-system | grep "istiod"`" ]; then
-  echo 'istiod has already been installed'
-else
-  helm install istiod istio/istiod -n istio-system --wait
-fi
-
-if [ -n "`helm list -n istio-ingress | grep "istio-ingressgateway"`" ]; then
-  echo 'istio-ingressgateway has already been installed'
-else
-  helm install istio-ingressgateway istio/gateway -n istio-system --create-namespace
-fi
+istioctl install --set profile=demo --set meshConfig.outboundTrafficPolicy.mode=REGISTRY_ONLY --set meshConfig.accessLogFile=/dev/stdout -y
+istioctl verify-install

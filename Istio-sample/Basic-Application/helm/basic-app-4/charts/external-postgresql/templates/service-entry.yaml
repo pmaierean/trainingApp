@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: {{ include "external-postgresql.fullname" . }}
+  namespace: {{ include "external-postgresql.namespace" . }}
+  labels:
+    {{- include "external-postgresql.labels" . | nindent 4 }}
+spec:
+  hosts:
+    - {{ .Values.database.longName }}
+  ports:
+    - number: {{ .Values.database.port }}
+      targetPort: {{ .Values.database.port }}
+      name: {{ .Values.database.name }}
+      protocol: TCP
+  resolution: STATIC
+  location: MESH_EXTERNAL
+  addresses:
+    - {{ .Values.database.address }}
+
+
