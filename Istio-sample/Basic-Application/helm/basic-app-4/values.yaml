@@ -1,0 +1,22 @@
+# Default values for basic-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+application:
+  namespace: sample
+
+service:
+  port: 80
+
+gateway:
+  host: mylocaldomain.com
+  port: 80
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+backend:
+  router: training-router
+  boot: training-restful
+  ui: training-ui
+

@@ -1,0 +1,23 @@
+application:
+  namespace: sample
+image:
+  repository: pmaierean/postgresql-client
+  pullPolicy: IfNotPresent
+  tag:
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+service:
+  type: ClusterIP
+  port: 8090
+
+fullnameOverride: false
+nameOverride: ""
+
+podSecurityContext: {}
+
+securityContext: {}

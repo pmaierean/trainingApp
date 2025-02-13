@@ -1,0 +1,12 @@
+apiVersion: telemetry.istio.io/v1alpha3
+kind: Telemetry
+metadata:
+  name: postgresql-client
+  namespace: sample
+spec:
+  workloadSelector:
+    labels:
+      app.kubernetes.io/name: postgresql-client
+  accessLogging:
+    - providers:
+        - name: envoy

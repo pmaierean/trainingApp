@@ -1,0 +1,11 @@
+application:
+  namespace: sample
+nameOverride: {}
+fullnameOverride: {}
+
+database:
+  port: 5432
+  address: 192.168.1.177
+  name: tcp
+  host: postgres
+  longName: localhost.postgres.com

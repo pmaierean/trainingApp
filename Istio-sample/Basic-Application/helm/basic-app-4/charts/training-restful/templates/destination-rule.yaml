@@ -1,0 +1,10 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: {{ include "training-restful.fullname" . }}
+  namespace: {{ include "training-restful.namespace" . }}
+spec:
+  host: {{ include "training-restful.fullname" . }}
+  workloadSelector:
+    matchLabels:
+      {{- include "training-restful.labels" . | nindent 6 }}
