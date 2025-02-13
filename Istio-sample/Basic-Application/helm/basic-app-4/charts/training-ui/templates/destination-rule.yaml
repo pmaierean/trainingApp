@@ -1,0 +1,10 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: {{ include "training-ui.fullname" . }}
+  namespace: {{ include "training-ui.namespace" . }}
+spec:
+  host: {{ include "training-ui.fullname" . }}
+  workloadSelector:
+    matchLabels:
+      {{- include "training-ui.labels" . | nindent 6 }}

@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Sidecar
+metadata:
+  name: {{ include "postgresql-client.fullname" . }}
+  namespace: {{ include "postgresql-client.namespace" . }}
+  labels:
+    {{- include "postgresql-client.labels" . | nindent 4 }}
+spec:
+  workloadSelector:
+    labels:
+      {{- include "postgresql-client.labels" . | nindent 6 }}
+  egress:
+    - port:
+        number: {{ .Values.database.port }}
+        protocol: TCP
+        name: {{ .Values.database.host }}
+      hosts:
+        - "*/{{ .Values.database.longName }}"

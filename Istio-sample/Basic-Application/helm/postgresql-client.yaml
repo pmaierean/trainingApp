@@ -1,0 +1,108 @@
+---
+# Source: postgresql-client/templates/service-account.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: postgres-client-postgresql-client
+  labels:
+    helm.sh/chart: postgresql-client-0.1.0
+    app.kubernetes.io/name: postgresql-client
+    app.kubernetes.io/instance: postgres-client
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.1"
+    app.kubernetes.io/managed-by: Helm
+automountServiceAccountToken: true
+---
+# Source: postgresql-client/templates/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: postgres-client-postgresql-client
+  namespace: sample
+rules: []
+---
+# Source: postgresql-client/templates/role-binding.yaml
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: postgres-client-postgresql-client
+roleRef:
+  kind: Role
+  name: postgres-client-postgresql-client
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: postgres-client-postgresql-client
+---
+# Source: postgresql-client/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-client-postgresql-client
+  labels:
+    helm.sh/chart: postgresql-client-0.1.0
+    app.kubernetes.io/name: postgresql-client
+    app.kubernetes.io/instance: postgres-client
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8090
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: postgresql-client
+    app.kubernetes.io/instance: postgres-client
+    app.kubernetes.io/namespace: sample
+---
+# Source: postgresql-client/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-client-postgresql-client
+  labels:
+    helm.sh/chart: postgresql-client-0.1.0
+    app.kubernetes.io/name: postgresql-client
+    app.kubernetes.io/instance: postgres-client
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postgresql-client
+      app.kubernetes.io/instance: postgres-client
+      app.kubernetes.io/namespace: sample
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: postgresql-client-0.1.0
+        app.kubernetes.io/name: postgresql-client
+        app.kubernetes.io/instance: postgres-client
+        app.kubernetes.io/namespace: sample
+        app.kubernetes.io/version: "0.1"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      serviceAccountName: postgres-client-postgresql-client
+      securityContext:
+        {}
+      restartPolicy: Always
+      containers:
+        - name: postgresql-client
+          securityContext:
+            {}
+          image: "pmaierean/postgresql-client:0.1"
+          imagePullPolicy: IfNotPresent
+          stdin: true
+          tty: true
+          command: ["/bin/sh"]
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 250m
+            limits:
+              memory: 256Mi
+              cpu: 500m
