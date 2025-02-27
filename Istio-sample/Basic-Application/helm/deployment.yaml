@@ -1,0 +1,790 @@
+---
+# Source: basic-app/templates/namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sample
+  labels:
+    istio-injection: enabled
+---
+# Source: basic-app/charts/postgresql-client/templates/service-account.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sample-postgresql-client
+  namespace: sample
+  labels:
+    helm.sh/chart: postgresql-client-0.1.0
+    app.kubernetes.io/name: postgresql-client
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.1"
+    app.kubernetes.io/managed-by: Helm
+automountServiceAccountToken: true
+---
+# Source: basic-app/charts/training-restful/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sample-training-restful
+  namespace: sample
+  labels:
+    helm.sh/chart: training-restful-0.0.2
+    app.kubernetes.io/name: training-restful
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.3"
+    app.kubernetes.io/managed-by: Helm
+automountServiceAccountToken: true
+---
+# Source: basic-app/charts/training-router/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sample-training-router
+  namespace: sample
+  labels:
+    helm.sh/chart: training-router-0.0.1
+    app.kubernetes.io/name: training-router
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.3"
+    app.kubernetes.io/managed-by: Helm
+automountServiceAccountToken: true
+---
+# Source: basic-app/charts/training-ui/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sample-training-ui
+  namespace: sample
+  labels:
+    helm.sh/chart: training-ui-0.0.1
+    app.kubernetes.io/name: training-ui
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.2"
+    app.kubernetes.io/managed-by: Helm
+automountServiceAccountToken: true
+---
+# Source: basic-app/charts/postgresql-cluster/templates/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sample-postgresql-cluster-secret
+  namespace: sample
+type: kubernetes.io/basic-auth
+data:
+  username: cGV0cmU=
+  password: Q2hhbmdlTWUkMTkx
+---
+# Source: basic-app/charts/postgresql-cluster/templates/super-user-secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sample-postgresql-cluster-super-secret
+  namespace: sample
+type: kubernetes.io/basic-auth
+data:
+  username: cG9zdGdyZXM=
+  password: Q2hhbmdlTWUkMTkx
+---
+# Source: basic-app/charts/training-restful/templates/liquibase.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: liquibase-changelog
+  namespace: sample
+data:
+    changelog.xml: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<databaseChangeLog\r\n
+    \       xmlns=\"http://www.liquibase.org/xml/ns/dbchangelog\"\r\n        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n
+    \       xsi:schemaLocation=\"http://www.liquibase.org/xml/ns/dbchangelog\r\n            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd\">\r\n
+    \   <changeSet author=\"Petre\" id=\"Baseline\">\r\n        <sqlFile encoding=\"UTF-8\"
+    endDelimiter=\";\" path=\"baseline/lines.sql\"\r\n                 relativeToChangelogFile=\"true\"
+    splitStatements=\"true\" stripComments=\"true\"/>\r\n        <sqlFile encoding=\"UTF-8\"
+    endDelimiter=\";\" path=\"baseline/line.sql\"\r\n                 relativeToChangelogFile=\"true\"
+    splitStatements=\"true\" stripComments=\"true\"/>\r\n    </changeSet>\r\n    <changeSet
+    author=\"Petre\" id=\"Data\">\r\n        <sqlFile encoding=\"UTF-8\" endDelimiter=\";\"
+    path=\"data/insertDefault.sql\"\r\n                 relativeToChangelogFile=\"true\"
+    splitStatements=\"true\" stripComments=\"true\"/>\r\n    </changeSet>\r\n\r\n</databaseChangeLog>"
+---
+# Source: basic-app/charts/training-restful/templates/persistent-volume.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: sample-training-restful-pv
+  namespace: sample
+  labels:
+    helm.sh/chart: training-restful-0.0.2
+    app.kubernetes.io/name: training-restful
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /opt/app/local/sample1
+---
+# Source: basic-app/charts/training-restful/templates/persistent-volume-claim.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sample-training-restful-pvc
+  namespace: sample
+  labels:
+    helm.sh/chart: training-restful-0.0.2
+    app.kubernetes.io/name: training-restful
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  volumeName: sample-training-restful-pv
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Source: basic-app/charts/postgresql-client/templates/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: sample-postgresql-client
+  namespace: sample
+rules: []
+---
+# Source: basic-app/charts/postgresql-client/templates/role-binding.yaml
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: sample-postgresql-client
+  namespace: sample
+roleRef:
+  kind: Role
+  name: sample-postgresql-client
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: sample-postgresql-client
+---
+# Source: basic-app/charts/postgresql-client/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-postgresql-client
+  namespace: sample
+  labels:
+    helm.sh/chart: postgresql-client-0.1.0
+    app.kubernetes.io/name: postgresql-client
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8090
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: postgresql-client
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+---
+# Source: basic-app/charts/training-restful/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-training-restful
+  namespace: sample
+  labels:
+    helm.sh/chart: training-restful-0.0.2
+    app.kubernetes.io/name: training-restful
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: training-restful
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+---
+# Source: basic-app/charts/training-router/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-training-router
+  namespace: sample
+  labels:
+    helm.sh/chart: training-router-0.0.1
+    app.kubernetes.io/name: training-router
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: training-router
+    app.kubernetes.io/instance: sample
+---
+# Source: basic-app/charts/training-ui/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-training-ui
+  namespace: sample
+  labels:
+    helm.sh/chart: training-ui-0.0.1
+    app.kubernetes.io/name: training-ui
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 4200
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: training-ui
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+---
+# Source: basic-app/charts/postgresql-client/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-postgresql-client
+  namespace: sample
+  labels:
+    helm.sh/chart: postgresql-client-0.1.0
+    app.kubernetes.io/name: postgresql-client
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postgresql-client
+      app.kubernetes.io/instance: sample
+      app.kubernetes.io/namespace: sample
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: postgresql-client-0.1.0
+        app.kubernetes.io/name: postgresql-client
+        app.kubernetes.io/instance: sample
+        app.kubernetes.io/namespace: sample
+        app.kubernetes.io/version: "0.1"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      serviceAccountName: sample-postgresql-client
+      securityContext:
+        {}
+      restartPolicy: Always
+      containers:
+        - name: postgresql-client
+          securityContext:
+            {}
+          image: "pmaierean/postgresql-client:0.1"
+          imagePullPolicy: IfNotPresent
+          stdin: true
+          tty: true
+          command: ["/bin/sh"]
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 250m
+            limits:
+              memory: 256Mi
+              cpu: 500m
+---
+# Source: basic-app/charts/training-restful/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-training-restful
+  namespace: sample
+  labels:
+    helm.sh/chart: training-restful-0.0.2
+    app.kubernetes.io/name: training-restful
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: training-restful
+      app.kubernetes.io/instance: sample
+      app.kubernetes.io/namespace: sample
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: training-restful-0.0.2
+        app.kubernetes.io/name: training-restful
+        app.kubernetes.io/instance: sample
+        app.kubernetes.io/namespace: sample
+        app.kubernetes.io/version: "0.3"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      serviceAccountName: sample-training-restful
+      securityContext:
+        {}
+      restartPolicy: Always
+      initContainers:
+        - name: liquidbase
+          image: liquibase/liquibase:latest
+          env:
+            - name: LIQUIBASE_DRIVER
+              value: org.postgresql.Driver
+            - name: LIQUIBASE_LOG_LEVEL
+              value: FINE
+            - name: LIQUIBASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: sample-postgresql-cluster-secret
+                  key: username
+            - name: LIQUIBASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sample-postgresql-cluster-secret
+                  key: password
+            - name: LIQUIBASE_URL
+              value: jdbc:postgresql://sample-postgresql-cluster-rw:5432/petre
+          volumeMounts:
+            - mountPath: /liquibase/changelog
+              name: liquibase-changelog-volume
+      containers:
+        - name: training-restful
+          securityContext:
+            {}
+          image: "pmaierean/training-app:0.3"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: FILE_PATH
+              value: /opt/app/local/sample/storage.csv
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: sample-postgresql-cluster-secret
+                  key: username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sample-postgresql-cluster-secret
+                  key: password
+            - name: DATABASE_URL
+              value: jdbc:postgresql://sample-postgresql-cluster-rw:5432/petre
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            initialDelaySeconds: 1000
+            failureThreshold: 1
+            periodSeconds: 60
+            terminationGracePeriodSeconds: 60
+            httpGet:
+              host: 127.0.0.1
+              path: /v1/api/index
+              port: 8080
+          volumeMounts:
+            - mountPath: /opt/app/local/sample
+              name: csv-volume
+      volumes:
+        - name: csv-volume
+          persistentVolumeClaim:
+            claimName: sample-training-restful-pvc
+        - name: liquibase-changelog-volume
+          configMap:
+             name: liquibase-changelog
+---
+# Source: basic-app/charts/training-router/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-training-router
+  namespace: sample
+  labels:
+    helm.sh/chart: training-router-0.0.1
+    app.kubernetes.io/name: training-router
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: training-router
+      app.kubernetes.io/instance: sample
+      app.kubernetes.io/namespace: sample
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: training-router-0.0.1
+        app.kubernetes.io/name: training-router
+        app.kubernetes.io/instance: sample
+        app.kubernetes.io/namespace: sample
+        app.kubernetes.io/version: "0.3"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      serviceAccountName: sample-training-router
+      securityContext:
+        {}
+      restartPolicy: Always
+      containers:
+        - name: training-router
+          securityContext:
+            {}
+          image: "pmaierean/training-router:0.3"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          env:
+            - name: DOMAIN_BOOT
+              value: sample-training-restful
+            - name: DOMAIN_UI
+              value: sample-training-ui
+          livenessProbe:
+            initialDelaySeconds: 1000
+            failureThreshold: 1
+            periodSeconds: 60
+            terminationGracePeriodSeconds: 60
+            httpGet:
+              host: 127.0.0.1
+              path: /
+              port: 80
+          resources:
+            {}
+---
+# Source: basic-app/charts/training-ui/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-training-ui
+  namespace: sample
+  labels:
+    helm.sh/chart: training-ui-0.0.1
+    app.kubernetes.io/name: training-ui
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: training-ui
+      app.kubernetes.io/instance: sample
+      app.kubernetes.io/namespace: sample
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: training-ui-0.0.1
+        app.kubernetes.io/name: training-ui
+        app.kubernetes.io/instance: sample
+        app.kubernetes.io/namespace: sample
+        app.kubernetes.io/version: "0.2"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      serviceAccountName: sample-training-ui
+      securityContext:
+        {}
+      restartPolicy: Always
+      containers:
+        - name: training-ui
+          securityContext:
+            {}
+          image: "pmaierean/training-app-ui:0.2"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 4200
+              protocol: TCP
+          livenessProbe:
+            initialDelaySeconds: 1000
+            failureThreshold: 1
+            periodSeconds: 60
+            terminationGracePeriodSeconds: 60
+            httpGet:
+              host: 127.0.0.1
+              path: /
+              port: 4200
+          resources:
+            {}
+---
+# Source: basic-app/charts/postgresql-cluster/templates/cluster.yaml
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: sample-postgresql-cluster
+  namespace: sample
+  labels:
+    helm.sh/chart: postgresql-cluster-0.0.1
+    app.kubernetes.io/name: postgresql-cluster
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  instances: 3
+  storage:
+    size: 1Gi
+  primaryUpdateStrategy: unsupervised
+  superuserSecret:
+    name: sample-postgresql-cluster-super-secret
+  enableSuperuserAccess: true
+  bootstrap:
+    initdb:
+      database: petre
+      owner: petre
+      secret:
+        name: sample-postgresql-cluster-secret
+---
+# Source: basic-app/charts/postgresql-cluster/templates/destination-rule.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: sample-postgresql-cluster
+  namespace: sample
+spec:
+  host: sample-postgresql-cluster
+  workloadSelector:
+    matchLabels:
+      helm.sh/chart: postgresql-cluster-0.0.1
+      app.kubernetes.io/name: postgresql-cluster
+      app.kubernetes.io/instance: sample
+      app.kubernetes.io/namespace: sample
+      app.kubernetes.io/version: "0.1"
+      app.kubernetes.io/managed-by: Helm
+---
+# Source: basic-app/charts/training-restful/templates/destination-rule.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: sample-training-restful
+  namespace: sample
+spec:
+  host: sample-training-restful
+  workloadSelector:
+    matchLabels:
+      helm.sh/chart: training-restful-0.0.2
+      app.kubernetes.io/name: training-restful
+      app.kubernetes.io/instance: sample
+      app.kubernetes.io/namespace: sample
+      app.kubernetes.io/version: "0.3"
+      app.kubernetes.io/managed-by: Helm
+---
+# Source: basic-app/charts/training-router/templates/destination-rule.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: sample-training-router
+  namespace: sample
+spec:
+  host: sample-training-router
+  workloadSelector:
+    matchLabels:
+      helm.sh/chart: training-router-0.0.1
+      app.kubernetes.io/name: training-router
+      app.kubernetes.io/instance: sample
+      app.kubernetes.io/namespace: sample
+      app.kubernetes.io/version: "0.3"
+      app.kubernetes.io/managed-by: Helm
+---
+# Source: basic-app/charts/training-ui/templates/destination-rule.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: sample-training-ui
+  namespace: sample
+spec:
+  host: sample-training-ui
+  workloadSelector:
+    matchLabels:
+      helm.sh/chart: training-ui-0.0.1
+      app.kubernetes.io/name: training-ui
+      app.kubernetes.io/instance: sample
+      app.kubernetes.io/namespace: sample
+      app.kubernetes.io/version: "0.2"
+      app.kubernetes.io/managed-by: Helm
+---
+# Source: basic-app/templates/gateway.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: sample-basic-app
+  namespace: sample
+  labels:
+    helm.sh/chart: basic-app-0.0.1
+    app.kubernetes.io/name: basic-app
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/version: "0.0.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+    - port:
+        number: 80
+        name: http1
+        protocol: HTTP
+      hosts:
+        - "mylocaldomain.com"
+---
+# Source: basic-app/charts/postgresql-cluster/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: sample-postgresql-cluster
+  namespace: sample
+  labels:
+    helm.sh/chart: postgresql-cluster-0.0.1
+    app.kubernetes.io/name: postgresql-cluster
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  hosts:
+    - "sample-postgresql-cluster-rw.sample.svc.cluster.local"
+  http:
+    - name: "sample-postgresql-cluster-routes"
+      match:
+        - uri:
+            prefix: "/"
+      route:
+        - destination:
+            host: "sample-postgresql-cluster-rw.sample.svc.cluster.local"
+---
+# Source: basic-app/charts/training-restful/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: sample-training-restful
+  namespace: sample
+  labels:
+    helm.sh/chart: training-restful-0.0.2
+    app.kubernetes.io/name: training-restful
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  hosts:
+   - sample-training-restful.sample.svc.cluster.local
+  http:
+   - name: "sample-training-restful-routes"
+     match:
+       - uri:
+           prefix: "/"
+     route:
+       - destination:
+           host: sample-training-restful.sample.svc.cluster.local
+---
+# Source: basic-app/charts/training-router/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: sample-training-router
+  namespace: sample
+  labels:
+    helm.sh/chart: training-router-0.0.1
+    app.kubernetes.io/name: training-router
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  hosts:
+   - sample-training-router.sample.svc.cluster.local
+  http:
+   - name: "sample-training-router-routes"
+     match:
+       - uri:
+           prefix: "/"
+     route:
+       - destination:
+           host: sample-training-router.sample.svc.cluster.local
+---
+# Source: basic-app/charts/training-ui/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: sample-training-ui
+  namespace: sample
+  labels:
+    helm.sh/chart: training-ui-0.0.1
+    app.kubernetes.io/name: training-ui
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/namespace: sample
+    app.kubernetes.io/version: "0.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  hosts:
+   - sample-training-ui.sample.svc.cluster.local
+  http:
+   - name: "sample-training-ui-routes"
+     match:
+       - uri:
+           prefix: "/"
+     route:
+       - destination:
+             host: sample-training-ui.sample.svc.cluster.local
+---
+# Source: basic-app/templates/virtual-server.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: sample-basic-app
+  namespace: sample
+  labels:
+    helm.sh/chart: basic-app-0.0.1
+    app.kubernetes.io/name: basic-app
+    app.kubernetes.io/instance: sample
+    app.kubernetes.io/version: "0.0.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  hosts:
+   - "mylocaldomain.com"
+  gateways:
+   - sample-basic-app
+  http:
+     - match:
+         - uri:
+             prefix: /
+       route:
+         - destination:
+             host: sample-training-router
+             port:
+               number: 80

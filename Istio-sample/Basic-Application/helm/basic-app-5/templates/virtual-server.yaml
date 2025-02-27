@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "basic-app.fullname" . }}
+  namespace: {{ include "basic-app.namespace" . }}
+  labels:
+    {{- include "basic-app.labels" . | nindent 4 }}
+spec:
+  hosts:
+   - "{{ .Values.gateway.host }}"
+  gateways:
+   - {{ include "basic-app.fullname" . }}
+  http:
+     - match:
+         - uri:
+             prefix: /
+       route:
+         - destination:
+             host: {{ .Release.Name }}-{{ .Values.backend.router }}.{{ include "basic-app.namespace" . }}.svc.cluster.local
+             port:
+               number: 80

@@ -1,4 +1,0 @@
-spec:
-  external_services:
-    prometheus:
-      url: "http://prometheus-server.istio-system:9090/"

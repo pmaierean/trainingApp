@@ -1,18 +1,20 @@
 name: training-app
 services:
   PostgreSQL:
-    image: postgres:17-alpine
+    image: pmaierean/maiereni_postgresql:0.1
+    build:
+      context: Database
+      dockerfile: Dockerfile
     container_name: postgresql
-    command: ["postgres", "-c", "log_connections=true"]
     env_file:
       - ./Database/.env
     ports:
       - 54322:5432
     restart: always
   liquidbase:
-    image: pmaierean/maiereni_liquidbase:0.1
+    image: pmaierean/maiereni_liquidbase:0.2
     build:
-      context: Database
+      context: Liquibase
       dockerfile: Dockerfile
     container_name: liquibase
     env_file:
@@ -47,7 +49,7 @@ services:
         condition: service_completed_successfully
     restart: always
   training-router:
-    image: pmaierean/training-router:0.3
+    image: pmaierean/training-router:0.4
     build:
       context: Router
       dockerfile: Dockerfile

@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "training-restful.fullname" . }}
+  namespace: {{ include "training-restful.namespace" . }}
+  labels:
+    {{- include "training-restful.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "training-restful.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "training-restful.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "training-restful.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      restartPolicy: Always
+      initContainers:
+        - name: liquidbase
+          image: liquibase/liquibase:latest
+          command: ["liquibase", "update", "--changeLogFile=changelog/changelogs.sql"]
+          env:
+            - name: LIQUIBASE_COMMAND_DRIVER
+              value: org.postgresql.Driver
+            - name: LIQUIBASE_LOG_LEVEL
+              value: FINE
+            - name: LIQUIBASE_COMMAND_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgresql-cluster-secret
+                  key: username
+            - name: LIQUIBASE_COMMAND_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgresql-cluster-secret
+                  key: password
+            - name: LIQUIBASE_COMMAND_URL
+              value: {{ .Values.database.url }}
+            - name: USER_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgresql-cluster-secret
+                  key: username
+          volumeMounts:
+            - mountPath: /liquibase/changelog
+              name: liquibase-changelog-volume
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: FILE_PATH
+              value: /opt/app/local/sample/storage.csv
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgresql-cluster-secret
+                  key: username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgresql-cluster-secret
+                  key: password
+            - name: DATABASE_URL
+              value: {{ .Values.database.url }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            failureThreshold: 1
+            periodSeconds: 60
+            terminationGracePeriodSeconds: 60
+            httpGet:
+              host: 127.0.0.1
+              path: /v1/api/index
+              port: {{ .Values.service.port }}
+          volumeMounts:
+            - mountPath: /opt/app/local/sample
+              name: csv-volume
+      volumes:
+        - name: csv-volume
+          persistentVolumeClaim:
+            claimName: {{ include "training-restful.fullname" . }}-pvc
+        - name: liquibase-changelog-volume
+          configMap:
+             name: liquibase-changelog
+             defaultMode: 0755

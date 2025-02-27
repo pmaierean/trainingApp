@@ -81,3 +81,8 @@ The database connection is made directly from the Restful container in Kubernets
 The component diagram at this stage of development is below
 
 ![Component diagram](https://github.com/pmaierean/trainingApp/blob/main/Istio-sample/Basic-Application/documentation/Step4.png)
+
+## Stage 5 - Installing native cloud Postgres operator
+
+The goal is to have a persistence layer within the Kubernetes cluster for the application. The replication of the database
+is such that it can recreate schema and data upon cluster migration (with liquidbase) upon recreation. 
