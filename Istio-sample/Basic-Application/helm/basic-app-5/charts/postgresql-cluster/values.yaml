@@ -1,0 +1,10 @@
+application:
+  namespace: sample
+nameOverride: {}
+fullnameOverride: {}
+
+database:
+  root: postgres
+  rootPassword: ChangeMe$191
+  user: petre
+  password: ChangeMe$191

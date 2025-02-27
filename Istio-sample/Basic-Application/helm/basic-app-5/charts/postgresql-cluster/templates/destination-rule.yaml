@@ -1,0 +1,10 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: {{ include "postgresql-cluster.fullname" . }}
+  namespace: {{ include "postgresql-cluster.namespace" . }}
+spec:
+  host: {{ include "postgresql-cluster.fullname" . }}
+  workloadSelector:
+    matchLabels:
+      {{- include "postgresql-cluster.labels" . | nindent 6 }}
