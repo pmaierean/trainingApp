@@ -1,0 +1,21 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ include "postgresql-cluster.fullname" . }}
+  namespace: {{ include "postgresql-cluster.namespace" . }}
+  labels:
+    {{- include "postgresql-cluster.labels" . | nindent 4 }}
+spec:
+  instances: 3
+  storage:
+    size: 1Gi
+  primaryUpdateStrategy: unsupervised
+  superuserSecret:
+    name: {{ include "postgresql-cluster.supersecretname" . }}
+  enableSuperuserAccess: true
+  bootstrap:
+    initdb:
+      database: petre
+      owner: petre
+      secret:
+        name: {{ include "postgresql-cluster.secretname" . }}

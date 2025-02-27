@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "training-restful.fullname" . }}
+  namespace: {{ include "training-restful.namespace" . }}
+  labels:
+    {{- include "training-restful.labels" . | nindent 4 }}
+spec:
+  hosts:
+   - {{ include "training-restful.fullname" . }}.{{ include "training-restful.namespace" . }}.svc.cluster.local
+  http:
+   - name: "{{ include "training-restful.fullname" . }}-routes"
+     match:
+       - uri:
+           prefix: "/"
+     route:
+       - destination:
+           host: {{ include "training-restful.fullname" . }}.{{ include "training-restful.namespace" . }}.svc.cluster.local

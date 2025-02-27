@@ -1,0 +1,23 @@
+FROM gradle:8.12-alpine
+
+LABEL MANTAINER="Petre Maierean (pmaierean@gmail.com)"
+
+ENV LIQUIBASE_COMMAND_INIT_PROJECT_PROJECT_DIR=${LIQUIBASE_PROJECT_DIR:-.}\
+    LIQUIBASE_COMMAND_DRIVER=${LIQUIBASE_COMMAND_DRIVER:-org.postgresql.Driver}\
+    LIQUIBASE_COMMAND_URL=${LIQUIBASE_COMMAND_URL:-jdbc:postgresql://localhost:5432/postgres}\
+    LIQUIBASE_COMMAND_USERNAME=${LIQUIBASE_COMMAND_USERNAME:-root}\
+    LIQUIBASE_COMMAND_PASSWORD=${LIQUIBASE_COMMAND_PASSWORD:-root}\
+    LIQUIBASE_LOG_LEVEL=${LIQUIBASE_LOG_LEVEL:-FINE}\
+    USER_NAME=${USER_NAME:-tester}\
+    USER_PASSWORD=${USER_PASSWORD:-changeIt}
+
+
+ADD ${LIQUIBASE_PROJECT_DIR} /usr/local/liquibase
+
+WORKDIR /usr/local/liquibase
+USER 0
+RUN mkdir -p /usr/local/liquibase/.gradle
+USER $CONTAINER_USER_ID
+
+CMD gradle update
+
